@@ -61,12 +61,12 @@ export function SignUpPage() {
             <br />
             {errorMsg && 
                 (
-                    <Alert variant="danger">Error Lorem ipsum dolor sit amet consectetur adipisicing elit. </Alert>
+                    <Alert variant="danger">Such a user exists!!! (Error)</Alert>
                 )
             }
             {successMsg && 
                 (
-                    <Alert variant="success">You successful</Alert>
+                    <Alert variant="success">You are registered!!! <Link to={RouterPath.login}>Log in</Link></Alert>
                 )
             }
             <Form onSubmit={(e)=> handleSubmit(e)}>

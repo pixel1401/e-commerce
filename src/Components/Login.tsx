@@ -24,7 +24,6 @@ export function LoginPage () {
             setSuccessMsg('');
             setErrorMsg('Wrong email or password');
         });
-
     }
 
 
@@ -41,7 +40,7 @@ export function LoginPage () {
             }
             {successMsg && 
                 (
-                    <Alert variant="success">You successful</Alert>
+                    <Alert variant="success">You successful!!! <Link to={'/'}>Home</Link> </Alert>
                 )
             }
             <Form onSubmit={handleSubmit}>

@@ -1,6 +1,7 @@
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
+import 'firebase/compat/storage';
 
 const firebaseConfig = {
     apiKey: "AIzaSyA3zN3Y5YqN5uqJusDv4UjspVLKTnJuyRw",
@@ -16,14 +17,21 @@ const firebaseConfig = {
 
 const auth = firebase.auth();
 const fs = firebase.firestore();
-
-export {auth , fs };
+const storage = firebase.storage();
+export {auth , fs  , storage};
 
 
 
 
 
 export const firebaseCollectionName = {
-    users : 'users'
+    users : 'users',
+    products : 'products'
 } 
+
+
+
+export const storageFolder = {
+  imageFolder : 'product-img'
+}
 

@@ -57,15 +57,14 @@ export function NavBar({ user }: NavbarProps) {
                                 <Col xs='auto'>
                                     <Stack direction='horizontal'>
                                         <div className="user">{user.fullName}</div>
+                                        <Link to={RouterPath.add} style={{margin:'0 15px'}}>Add product</Link>
                                         <Link style={{margin:'0 15px'}} to={'/cart'}>
                                         <Icon icon={shoppingCart} size={20}/>
                                         </Link>
                                         <Button variant="primary" onClick={() => HandleLogOut()}>
                                                 Log out
-                                            </Button>
-
+                                        </Button>
                                     </Stack>
-                                
                                 </Col>
                             )
 

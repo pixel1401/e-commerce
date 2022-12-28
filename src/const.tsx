@@ -2,7 +2,8 @@
 
 export const RouterPath = {
     signUp : '/signUp',
-    login : '/login'
+    login : '/login',
+    add : '/add-product'
 } 
 
 
