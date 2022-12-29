@@ -10,29 +10,32 @@ import  {Icon} from 'react-icons-kit';
 import { shoppingCart } from 'react-icons-kit/feather/shoppingCart';
 import { auth } from '../config/Config';
 import { useNavigate } from "react-router-dom";
+import useProviderState from '../context/StateContext';
 
-type NavbarProps = {
-    user: IUsers | null
-}
 
-export function NavBar({ user }: NavbarProps) {
+export function NavBar() {
+
+    const {user} = useProviderState();
+
+
     const navigate = useNavigate();
 
     const HandleLogOut = () => {
-        
         auth.signOut().then(()=> {
             navigate(RouterPath.login);
         })
     }
     
     return (
-        <Stack style={{ marginTop: '20px', padding: '20px 0', background: 'grey' }}>
+        <Stack style={{  padding: '20px 0', background: 'grey' }}>
             <Container>
                 <Row style={{ alignItems: 'center' }}>
                     <Col className='mb-8'>
-                        <div className="main-logo">Logo</div>
+                        <Link to={'/'}>
+                            <div className="main-logo">Logo</div>
+                        </Link>
                     </Col>
-                    {user === null ?
+                    {user === undefined ?
                         (
                             <Col xs={'auto'}>
                                 <Row>
@@ -58,8 +61,8 @@ export function NavBar({ user }: NavbarProps) {
                                     <Stack direction='horizontal'>
                                         <div className="user">{user.fullName}</div>
                                         <Link to={RouterPath.add} style={{margin:'0 15px'}}>Add product</Link>
-                                        <Link style={{margin:'0 15px'}} to={'/cart'}>
-                                        <Icon icon={shoppingCart} size={20}/>
+                                        <Link style={{margin:'0 15px'}} to={RouterPath.cart}>
+                                            <Icon icon={shoppingCart} size={20}/>
                                         </Link>
                                         <Button variant="primary" onClick={() => HandleLogOut()}>
                                                 Log out

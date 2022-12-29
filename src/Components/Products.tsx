@@ -18,7 +18,6 @@ export function Products() {
                 let data: IProduct = snap.data() as IProduct;
                 data.id = snap.id;
                 productsArray.push(data)
-                console.log(productsArray);
                 if (productsArray.length == products.docs.length) {
                     setProducts(productsArray);
                 }
@@ -42,7 +41,16 @@ export function Products() {
             <h3 className="text-center">Products</h3>
             <hr />
             <br />
-            <ProductItem products={products}/>
+            <Row sm={2}  lg={3} xl={4}>
+                {
+                    products.length > 0 &&
+                    products.map((item) => {
+                        return (
+                            <ProductItem products={item} key={item.id} />
+                        )
+                    })
+                }
+            </Row>
         </Container>
     )
 }

@@ -3,7 +3,8 @@
 export const RouterPath = {
     signUp : '/signUp',
     login : '/login',
-    add : '/add-product'
+    add : '/add-product',
+    cart : '/cart'
 } 
 
 
