@@ -1,7 +1,8 @@
 import { createContext, ReactNode, useContext, useEffect, useMemo, useState } from "react";
 import { Interface } from "readline";
-import { GetCurrentUser } from "../api/isSignIn";
+import { getCartUser, GetCurrentUser, getProducts } from "../api/isSignIn";
 import { auth, firebaseCollectionName, fs } from "../config/Config";
+import { ICart } from "../Models/ICart";
 import { IProduct } from "../Models/IProduct";
 import { IUsers } from "../Models/IUsers";
 
@@ -14,7 +15,7 @@ export type GlobalState = {
     isSignIn? : boolean , 
     loading? : boolean 
     error? : any ,
-    getSignIn : () => void   
+    cartState : ICart[]
 }
 
 
@@ -29,45 +30,53 @@ const StateContext = createContext<GlobalState>({isSignIn : false ,} as GlobalSt
 export function StateProvider ({children} : {children: ReactNode;}) {
 
     const [user , setUser] = useState<IUsers | undefined>();
+    const [products , setProducts] = useState<IProduct[]>([])
+    const [cartState , setCartState ] = useState<ICart[]>([]);
     const [error ,setError] = useState();
     const [loading , setLoading] = useState<boolean>(false);
     const [isSignIn , setIsSignIn] = useState<boolean>(false);
-
     const [uid , setUid] = useState('');
 
 
 
-    // useEffect(  () => {
-        
-    // } , [])
 
 
-
-    async function getSignIn () {
-        
-        if(user) return;
+    const getAllData = async () => {
         setLoading(true);
+
         auth.onAuthStateChanged(async user => {
-            if (user) { 
-                await fs.collection(firebaseCollectionName.users).doc(user.uid).get()
-                    .then((snapshot) => {
-                        setUser(snapshot!.data() as IUsers);
-                        setIsSignIn(true);
-                        setUid(user.uid);
-                        
-                    }).catch(err => {
-                        setUser(undefined);
-                        setUid('');
-                        setError(err);
-                        setIsSignIn(false);
-                    })
-            } else {
-                setUser(undefined);
+            if(user) {
+                let currentUser = await GetCurrentUser(user);                
+                setUser(currentUser);
+                setIsSignIn(true);
+                setUid(user.uid);
+
+                await getCartUser(user , async (carts)=> {
+                    console.log(carts);
+                    setCartState(carts);
+                })
+            }
+        })
+        
+        await getProducts().then((products) => {
+            if(products != undefined) {
+                console.log(products);
                 
+                setProducts(products);
             }
         })
         setLoading(false);
     }
+
+
+
+
+    useEffect(  () => {
+        getAllData()
+    } , [])
+
+
+
 
 
     const memoedValue = useMemo(
@@ -76,10 +85,11 @@ export function StateProvider ({children} : {children: ReactNode;}) {
           loading,
           error,
           isSignIn,
-          getSignIn ,
-          uid
+          cartState,
+          uid,
+          products
         }),
-        [user, loading, error]
+        [user, loading, error , cartState]
     );
 
 

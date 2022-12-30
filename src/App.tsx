@@ -12,11 +12,9 @@ import useProviderState, { StateProvider } from './context/StateContext';
 function App() {
 
 
-  const {user , getSignIn } = useProviderState();
+  const {user  } = useProviderState();
     
-    useEffect(()=> {
-        getSignIn();
-    } , [])
+    
 
 
 

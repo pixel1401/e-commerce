@@ -4,22 +4,38 @@ import {
     MDBCardBody,
     MDBCardImage,
     MDBCol,
-    MDBContainer,
     MDBIcon,
     MDBInput,
     MDBRow,
     MDBTypography,
 } from "mdb-react-ui-kit";
+import { ChangeEvent, useState } from "react";
 import { ICart } from "../Models/ICart";
-
+import { trash } from 'react-icons-kit/feather/trash';
+import Icon from "react-icons-kit";
 
 
 type CartItemProps = {
-    cart: ICart
+    cart: ICart,
+    changeCountCart : (cart : ICart)=> void ,
+    deleteCart : (cart : ICart) => void
 }
 
 
-export function CartItem({ cart }: CartItemProps) {
+export function CartItem({ cart , changeCountCart  , deleteCart}: CartItemProps) {
+
+    const [totalPrice , setTotalPrice] = useState(cart.totalProductPrice); 
+
+    const  handleChangeCount = (e : ChangeEvent<HTMLInputElement>)=> {
+        let countCart : number = Number(e.target.value);
+        cart.count = countCart;
+        cart.totalProductPrice = cart.price * countCart;
+        setTotalPrice(cart.totalProductPrice);
+        changeCountCart(cart);
+    }
+
+
+
     return (
         <>
             <MDBCard className="rounded-3 mb-4">
@@ -32,10 +48,6 @@ export function CartItem({ cart }: CartItemProps) {
                         </MDBCol>
                         <MDBCol md="3" lg="3" xl="3">
                             <p className="lead fw-normal mb-2">{cart.title}</p>
-                            <p>
-                                <span className="text-muted">Size: </span>M{" "}
-                                <span className="text-muted">Color: </span>Grey
-                            </p>
                         </MDBCol>
                         <MDBCol md="3" lg="3" xl="2"
                             className="d-flex align-items-center justify-content-around">
@@ -43,7 +55,7 @@ export function CartItem({ cart }: CartItemProps) {
                                 <MDBIcon fas icon="minus" />
                             </MDBBtn>
 
-                            <MDBInput min={0} defaultValue={2} type="number" size="sm" />
+                            <MDBInput onChange={(e) => handleChangeCount(e) } min={1} defaultValue={cart.count} type="number" size="sm" />
 
                             <MDBBtn color="link" className="px-2">
                                 <MDBIcon fas icon="plus" />
@@ -51,20 +63,16 @@ export function CartItem({ cart }: CartItemProps) {
                         </MDBCol>
                         <MDBCol md="3" lg="2" xl="2" className="offset-lg-1">
                             <MDBTypography tag="h5" className="mb-0">
-                                T{cart.price}
+                                T{totalPrice}
                             </MDBTypography>
                         </MDBCol>
-                        <MDBCol md="1" lg="1" xl="1" className="text-end">
-                            <a href="#!" className="text-danger">
-                                <MDBIcon fas icon="trash text-danger" size="lg" />
-                            </a>
+                        <MDBCol onClick={ () => deleteCart(cart)} md="1" lg="1" xl="1" className="text-end">
+                                <Icon icon={trash} size={20}/>
                         </MDBCol>
+                        
                     </MDBRow>
                 </MDBCardBody>
             </MDBCard>
-
-
-
         </>
     )
 }
