@@ -11,6 +11,7 @@ import { shoppingCart } from 'react-icons-kit/feather/shoppingCart';
 import { auth } from '../config/Config';
 import { useNavigate } from "react-router-dom";
 import useProviderState from '../context/StateContext';
+import React from 'react';
 
 
 export function NavBar() {

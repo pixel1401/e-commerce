@@ -27,7 +27,9 @@ export {auth , fs  , storage};
 export const firebaseCollectionName = {
     users : 'users',
     products : 'products' ,
-    cart : 'Cart '
+    cart : 'Cart ' ,
+    buyerInfo  : 'Buyer-Personal-Info' ,
+    buyerCart : 'Buyer-Cart '
 } 
 
 

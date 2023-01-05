@@ -1,7 +1,9 @@
+import React from 'react';
 import { createContext, ReactNode, useContext, useEffect, useMemo, useState } from "react";
 import { Interface } from "readline";
-import { getCartUser, GetCurrentUser, getProducts } from "../api/isSignIn";
+import { getCartUser, GetCurrentUser, getProducts } from "../api/api";
 import { auth, firebaseCollectionName, fs } from "../config/Config";
+import { IBuyerInfo } from "../Models/IBuyerInfo";
 import { ICart } from "../Models/ICart";
 import { IProduct } from "../Models/IProduct";
 import { IUsers } from "../Models/IUsers";
@@ -9,33 +11,33 @@ import { IUsers } from "../Models/IUsers";
 
 
 export type GlobalState = {
-    user? : IUsers  ,
-    uid : string , 
-    products? : IProduct[] ,
-    isSignIn? : boolean , 
-    loading? : boolean 
-    error? : any ,
-    cartState : ICart[]
+    user?: IUsers,
+    uid: string,
+    products?: IProduct[],
+    isSignIn?: boolean,
+    loading?: boolean
+    error?: any,
+    cartState: ICart[]
 }
 
 
 
-const StateContext = createContext<GlobalState>({isSignIn : false ,} as GlobalState);
+const StateContext = createContext<GlobalState>({ isSignIn: false, } as GlobalState);
 
 
 
 
 
 
-export function StateProvider ({children} : {children: ReactNode;}) {
+export function StateProvider({ children }: { children: ReactNode; }) {
 
-    const [user , setUser] = useState<IUsers | undefined>();
-    const [products , setProducts] = useState<IProduct[]>([])
-    const [cartState , setCartState ] = useState<ICart[]>([]);
-    const [error ,setError] = useState();
-    const [loading , setLoading] = useState<boolean>(false);
-    const [isSignIn , setIsSignIn] = useState<boolean>(false);
-    const [uid , setUid] = useState('');
+    const [user, setUser] = useState<IUsers | undefined>();
+    const [products, setProducts] = useState<IProduct[]>([])
+    const [cartState, setCartState] = useState<ICart[]>([]);
+    const [error, setError] = useState();
+    const [loading, setLoading] = useState<boolean>(false);
+    const [isSignIn, setIsSignIn] = useState<boolean>(false);
+    const [uid, setUid] = useState('');
 
 
 
@@ -45,23 +47,23 @@ export function StateProvider ({children} : {children: ReactNode;}) {
         setLoading(true);
 
         auth.onAuthStateChanged(async user => {
-            if(user) {
-                let currentUser = await GetCurrentUser(user);                
+            if (user) {
+                let currentUser = await GetCurrentUser(user.uid);
                 setUser(currentUser);
                 setIsSignIn(true);
                 setUid(user.uid);
 
-                await getCartUser(user , async (carts)=> {
+                await getCartUser(user, async (carts) => {
                     console.log(carts);
                     setCartState(carts);
                 })
             }
         })
-        
+
         await getProducts().then((products) => {
-            if(products != undefined) {
+            if (products != undefined) {
                 console.log(products);
-                
+
                 setProducts(products);
             }
         })
@@ -71,9 +73,18 @@ export function StateProvider ({children} : {children: ReactNode;}) {
 
 
 
-    useEffect(  () => {
+    useEffect(() => {
         getAllData()
-    } , [])
+    }, [])
+
+
+
+
+    const setOrderCash = (buyerInfo: IBuyerInfo) => {
+        if (!uid) return;
+
+
+    }
 
 
 
@@ -81,15 +92,15 @@ export function StateProvider ({children} : {children: ReactNode;}) {
 
     const memoedValue = useMemo(
         () => ({
-          user,
-          loading,
-          error,
-          isSignIn,
-          cartState,
-          uid,
-          products
+            user,
+            loading,
+            error,
+            isSignIn,
+            cartState,
+            uid,
+            products
         }),
-        [user, loading, error , cartState]
+        [user, loading, error, cartState]
     );
 
 

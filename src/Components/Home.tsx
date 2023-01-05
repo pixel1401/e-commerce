@@ -1,13 +1,14 @@
+import React from "react";
 import { NavBar } from "./Navbar";
-import { Products } from "./Products";
+import { Products } from "./Products/Products";
 
 
 
-export function Home () {
+export function Home() {
     return (
         <>
-            <NavBar  />
-            <Products/>
+            <NavBar />
+            <Products />
         </>
     )
 }
